@@ -1,7 +1,9 @@
 
 # object files
+obj/
 *.o
-*obj
+*.obj
 
 # executalbles
 *.exe
+server
