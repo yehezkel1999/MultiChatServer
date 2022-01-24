@@ -46,7 +46,7 @@ RM=rm -f
 # zip command:
 ZIP=zip
 
-# .c and .h files directory:
+# .cpp and .h files directory:
 SRC=src
 # object files directory:
 OBJ=obj
@@ -76,7 +76,7 @@ release: $(BIN)
 $(BIN): $(OBJS) $(OBJ)
 	$(CC) $(CFLAGS) $(OBJS) -o $@ $(LDFLAGS)
 
-# make every obj file with the corresponding c file.
+# make every obj file with the corresponding cpp file.
 $(OBJ)/%.o: $(SRC)/%.cpp $(OBJ) 
 	$(CC) $(CFLAGS) -c $< -o $@
 
