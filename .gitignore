@@ -6,4 +6,8 @@ obj/
 
 # executalbles
 *.exe
-server
+
+# files with no extentions
+*
+!*.*
+!/**/
