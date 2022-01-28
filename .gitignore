@@ -1,4 +1,9 @@
 
+# files with no extentions
+*
+!*.*
+!/**/
+
 # object files
 obj/
 *.o
@@ -6,8 +11,3 @@ obj/
 
 # executalbles
 *.exe
-
-# files with no extentions
-*
-!*.*
-!/**/
