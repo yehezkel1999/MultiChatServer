@@ -35,12 +35,17 @@
 # -g: debug flag
 # -Wall: enables compiler warnings
 
+SOCK_DIR=/home/hezi/projects/cpp/socket/
+SOCK_MAKE=$(SOCK_DIR)make
+SOCK_OBJ=$(SOCK_DIR)Socket.so
+MAKE_SOCK=cd $(SOCK_DIR) && make
+
 # compiler:
 CC=g++
 # compiler flags: 
 CFLAGS=-g -Wall
-# linker flags:
-LDFLAGS=
+# linker flags, -L<path>: look in the path for libraries, -lsocket: link with libsocket:
+LDFLAGS=-L$(SOCK_DIR) -lsocket
 # remove command (predefined as rm -f):
 RM=rm -f
 # zip command:
@@ -64,12 +69,23 @@ BIN=server
 SUBMIT=server.zip
 
 # the target to be executed when the makefile is executed (command: make)
+all: sockd
 all: $(BIN)
+
+# make socket library in debug mode
+sockd:
+	$(MAKE_SOCK)
+
+# make socket library in release mode
+sockr:
+	$(MAKE_SOCK) release
+
 
 # release build: cleans the build and rebuilds it with optimazation flags 
 # rather than debug flags (command: make release)
 release: CFLAGS=-O2 -DNDEBUG
 release: clean
+release: sockr
 release: $(BIN)
 
 # make the binary with the given compiler, flags and all obj files.
@@ -93,6 +109,6 @@ clean:
 
 # deletes the previously made zipped file and zips the binary, and
 # the source files directory (command: make submit) 
-submit:
+zip:
 	$(RM) $(SUBMIT)
 	$(ZIP) $(SUBMIT) $(BIN) $(SRC)
