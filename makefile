@@ -94,17 +94,13 @@ release: sockr
 release: $(BIN)
 
 # make the binary with the given compiler, flags and all obj files.
-$(BIN): $(OBJS) $(OBJ)/
+$(BIN): $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o $@ $(LDFLAGS)
 
 # make every obj file with the corresponding cpp file.
-$(OBJ)/%.o: $(SRC)/%.cpp $(OBJ)/
+$(OBJ)/%.o: $(SRC)/%.cpp
 	mkdir -p $(@D)
 	$(CC) $(CFLAGS) -c $< -o $@
-
-# creates obj files directory (if it does not already exist).
-$(OBJ)/:
-	mkdir -p $@
 
 # deletes the binary, all the files in the obj files directory, and 
 # debug symbols (command: make clean)
