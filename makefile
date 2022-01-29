@@ -35,26 +35,26 @@
 # -g: debug flag
 # -Wall: enables compiler warnings
 
-SOCK_DIR=/home/hezi/projects/cpp/socket/
-SOCK_MAKE=$(SOCK_DIR)make
-SOCK_OBJ=$(SOCK_DIR)Socket.so
-MAKE_SOCK=cd $(SOCK_DIR) && make
+SOCK_DIR:=/home/hezi/projects/cpp/socket/
+SOCK_MAKE:=$(SOCK_DIR)make
+SOCK_OBJ:=$(SOCK_DIR)Socket.so
+MAKE_SOCK:=cd $(SOCK_DIR) && make
 
 # compiler:
-CC=g++
+CC:=g++
 # compiler flags: 
 CFLAGS=-g -Wall
 # linker flags, -L<path>: look in the path for libraries, -lsocket: link with libsocket:
-LDFLAGS=-L$(SOCK_DIR) -lsocket
+LDFLAGS:=-L$(SOCK_DIR) -lsocket
 # remove command (predefined as rm -f):
-RM=rm -f
+RM:=rm -f
 # zip command:
-ZIP=zip
+ZIP:=zip
 
 # .cpp and .h files directory:
-SRC=src
+SRC:=src
 # object files directory:
-OBJ=obj
+OBJ:=obj
 
 # all of the source files: 
 SRCS:=$(shell find $(SRC)/ -name *.cpp)
@@ -69,9 +69,9 @@ OBJS:=$(shell find src/ -name *.cpp | sed s/.cpp/.o/g | sed 's/src/obj/')
 HDRS:=$(wildcard $(SRC)/*.h)
 
 # binary name:
-BIN=server
+BIN:=server
 # zipped file name in case the code needs to be submitted as a zipped file
-SUBMIT=server.zip
+SUBMIT:=server.zip
 
 # the target to be executed when the makefile is executed (command: make)
 all: sockd
