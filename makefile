@@ -57,11 +57,16 @@ SRC=src
 OBJ=obj
 
 # all of the source files: 
-SRCS=$(wildcard $(SRC)/*.cpp)
-# all of the object files:
-OBJS=$(patsubst $(SRC)/%.cpp, $(OBJ)/%.o, $(SRCS))
+SRCS:=$(shell find $(SRC)/ -name *.cpp)
+# $(info $$SRCS is [${SRCS}])
+
+# all of the object files, from the list of cpp files, swap out .cpp with .o,
+# reverse, cut the full path out, reverse again:
+OBJS:=$(shell find src/ -name *.cpp | sed s/.cpp/.o/g | sed 's/src/obj/')
+#$(info $$OBJS is [${OBJS}])
+
 # all of the header files:
-HDRS=$(wildcard $(SRC)/*.h)
+HDRS:=$(wildcard $(SRC)/*.h)
 
 # binary name:
 BIN=server
@@ -89,26 +94,27 @@ release: sockr
 release: $(BIN)
 
 # make the binary with the given compiler, flags and all obj files.
-$(BIN): $(OBJS) $(OBJ)
+$(BIN): $(OBJS) $(OBJ)/
 	$(CC) $(CFLAGS) $(OBJS) -o $@ $(LDFLAGS)
 
 # make every obj file with the corresponding cpp file.
-$(OBJ)/%.o: $(SRC)/%.cpp $(OBJ) 
+$(OBJ)/%.o: $(SRC)/%.cpp $(OBJ)/
+	mkdir -p $(@D)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 # creates obj files directory (if it does not already exist).
-$(OBJ):
+$(OBJ)/:
 	mkdir -p $@
 
 # deletes the binary, all the files in the obj files directory, and 
 # debug symbols (command: make clean)
 clean:
-	$(RM) -r $(OBJ)
+	$(RM) -r $(OBJ)/
 	$(RM) $(BIN)
-	$(RM) *.dSYM
+	$(RM) *.o
 
 # deletes the previously made zipped file and zips the binary, and
 # the source files directory (command: make submit) 
 zip:
 	$(RM) $(SUBMIT)
-	$(ZIP) $(SUBMIT) $(BIN) $(SRC)
+	$(ZIP) $(SUBMIT) $(BIN) $(SRC)/
