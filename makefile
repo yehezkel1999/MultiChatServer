@@ -45,7 +45,8 @@ CC:=g++
 # compiler flags: 
 CFLAGS=-g -Wall
 # linker flags, -L<path>: look in the path for libraries, -lsocket: link with libsocket:
-LDFLAGS:=-L$(SOCK_DIR) -lsocket
+#LDFLAGS:=-L$(SOCK_DIR) -lsocket
+LDFLAGS=
 # remove command (predefined as rm -f):
 RM:=rm -f
 # zip command:
