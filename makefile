@@ -35,7 +35,7 @@
 # -g: debug flag
 # -Wall: enables compiler warnings
 
-SOCK_DIR:=/home/hezi/projects/cpp/socket/
+SOCK_DIR:=/home/hezi/cpp-projects/socket/
 SOCK_MAKE:=$(SOCK_DIR)make
 SOCK_OBJ:=$(SOCK_DIR)Socket.so
 MAKE_SOCK:=cd $(SOCK_DIR) && make
@@ -45,8 +45,8 @@ CC:=g++
 # compiler flags: 
 CFLAGS=-g -Wall
 # linker flags, -L<path>: look in the path for libraries, -lsocket: link with libsocket:
-#LDFLAGS:=-L$(SOCK_DIR) -lsocket
-LDFLAGS=
+LDFLAGS:=-L$(SOCK_DIR) -lsocket
+#LDFLAGS=
 # remove command (predefined as rm -f):
 RM:=rm -f
 # zip command:
@@ -62,7 +62,7 @@ SRCS:=$(shell find $(SRC)/ -name *.cpp)
 # $(info $$SRCS is [${SRCS}])
 
 # all of the object files, from the list of cpp files, swap out .cpp with .o,
-# reverse, cut the full path out, reverse again:
+# and the location of the file, from src/ to obj/:
 OBJS:=$(shell find src/ -name *.cpp | sed s/.cpp/.o/g | sed 's/src/obj/')
 #$(info $$OBJS is [${OBJS}])
 
