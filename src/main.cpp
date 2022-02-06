@@ -1,10 +1,12 @@
 
 #include <iostream>
 #include <climits>
+#include <exception>
 #include "server/Server.h"
 
 int main(int argc, char **argv) {
     int port;
+    int exit_status;
 
     std::cout << '\n';
 
@@ -22,10 +24,17 @@ int main(int argc, char **argv) {
         std::cerr << "port exceeds maximum possible values" << std::endl;
         return -1;
     }
-    std::cout << "Server starting, listenning on port " << port;
-
+    
     Server server;
-    int exit_status = server.run("127.0.0.1", port, 5);
+    try {
+        exit_status = server.run("127.0.0.1", port, 5);
+    } catch (sock::socket_error &e) {
+        std::cerr << "A connection error has occured, info: " << e.what() << std::endl;
+        return -1;
+    } catch (std::exception &e) {
+        std::cerr << "An unexpected error has occured, info: " << e.what() << std::endl;
+        return -1;
+    }
 
     std::cout << "The server exited with status code: " << exit_status << std::endl;
     return 0;
