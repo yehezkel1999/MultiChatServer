@@ -35,64 +35,83 @@
 # -g: debug flag
 # -Wall: enables compiler warnings
 
+SOCK_DIR:=/home/hezi/cpp-projects/socket/
+SOCK_MAKE:=$(SOCK_DIR)make
+SOCK_OBJ:=$(SOCK_DIR)Socket.so
+MAKE_SOCK:=cd $(SOCK_DIR) && make
+
 # compiler:
-CC=g++
+CC:=g++
 # compiler flags: 
 CFLAGS=-g -Wall
-# linker flags:
-LDFLAGS=
+# linker flags, -L<path>: look in the path for libraries, -lsocket: link with libsocket:
+LDFLAGS:=-L$(SOCK_DIR) -lsocket
+#LDFLAGS=
 # remove command (predefined as rm -f):
-RM=rm -f
+RM:=rm -f
 # zip command:
-ZIP=zip
+ZIP:=zip
 
 # .cpp and .h files directory:
-SRC=src
+SRC:=src
 # object files directory:
-OBJ=obj
+OBJ:=obj
 
 # all of the source files: 
-SRCS=$(wildcard $(SRC)/*.cpp)
-# all of the object files:
-OBJS=$(patsubst $(SRC)/%.cpp, $(OBJ)/%.o, $(SRCS))
+SRCS:=$(shell find $(SRC)/ -name *.cpp)
+# $(info $$SRCS is [${SRCS}])
+
+# all of the object files, from the list of cpp files, swap out .cpp with .o,
+# and the location of the file, from src/ to obj/:
+OBJS:=$(shell find src/ -name *.cpp | sed s/.cpp/.o/g | sed 's/src/obj/')
+#$(info $$OBJS is [${OBJS}])
+
 # all of the header files:
-HDRS=$(wildcard $(SRC)/*.h)
+HDRS:=$(wildcard $(SRC)/*.h)
 
 # binary name:
-BIN=server
+BIN:=server
 # zipped file name in case the code needs to be submitted as a zipped file
-SUBMIT=server.zip
+SUBMIT:=server.zip
 
 # the target to be executed when the makefile is executed (command: make)
+all: sockd
 all: $(BIN)
+
+# make socket library in debug mode
+sockd:
+	$(MAKE_SOCK)
+
+# make socket library in release mode
+sockr:
+	$(MAKE_SOCK) release
+
 
 # release build: cleans the build and rebuilds it with optimazation flags 
 # rather than debug flags (command: make release)
 release: CFLAGS=-O2 -DNDEBUG
 release: clean
+release: sockr
 release: $(BIN)
 
 # make the binary with the given compiler, flags and all obj files.
-$(BIN): $(OBJS) $(OBJ)
+$(BIN): $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o $@ $(LDFLAGS)
 
 # make every obj file with the corresponding cpp file.
-$(OBJ)/%.o: $(SRC)/%.cpp $(OBJ) 
+$(OBJ)/%.o: $(SRC)/%.cpp
+	mkdir -p $(@D)
 	$(CC) $(CFLAGS) -c $< -o $@
-
-# creates obj files directory (if it does not already exist).
-$(OBJ):
-	mkdir -p $@
 
 # deletes the binary, all the files in the obj files directory, and 
 # debug symbols (command: make clean)
 clean:
-	$(RM) -r $(OBJ)
+	$(RM) -r $(OBJ)/
 	$(RM) $(BIN)
-	$(RM) *.dSYM
+	$(RM) *.o
 
 # deletes the previously made zipped file and zips the binary, and
 # the source files directory (command: make submit) 
-submit:
+zip:
 	$(RM) $(SUBMIT)
-	$(ZIP) $(SUBMIT) $(BIN) $(SRC)
+	$(ZIP) $(SUBMIT) $(BIN) $(SRC)/
